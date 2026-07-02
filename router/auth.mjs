@@ -4,10 +4,8 @@ import express from "express"
 const router = express.Router()
 
 // 회원가입
-router.post("/signup", (req, res) => {
-  // 회원가입 로직 구현
-  res.send("회원가입 완료")
-})
+// 주소 : http://127.0.0.1:8080/post/signup (POST)
+router.post("/signup", authController.signup)
 
 // 로그인
 router.post("/login", (req, res) => {
