@@ -31,6 +31,7 @@ export async function getById(id) {
     return getPosts().findOne({ _id: new ObjectId(id) }).then(mapOptionalPost)
 }
 
+// mapOptionalPost 함수는 포스트가 존재하면 _id를 문자열로 변환하여 id 속성으로 추가하고, 포스트가 존재하지 않으면 그대로 반환합니다.
 function mapOptionalPost(post) {
     return post ? { ...post, id: post._id.toString() } : post
 } 
@@ -42,12 +43,13 @@ export async function updatePost(id, text) {
         return null
     }
     await getPosts().updateOne({ _id: new ObjectId(id) }, { $set: { text } })
-    return { ...post, text }
+    return { ...post, text } // 수정된 포스트 반환
 }   
 
 // 포스트 삭제
 export async function deleteById(id) {
     const post = await getPosts().findOne({ _id: new ObjectId(id) })
+    // 포스트가 존재하지 않으면 null 반환
     if (!post) {
         return null
     }

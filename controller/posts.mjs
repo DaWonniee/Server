@@ -30,22 +30,29 @@ export async function getPost(req, res) {
 // 포스트 수정하는 함수
 export async function updatePost(req, res) {
     const id = req.params.id // URL 파라미터에서 포스트 ID 가져오기
-    const { text } = req.body // 요청 본문에서 수정할 텍스트 가져오기
+    const text = req.body.text // 요청 본문에서 수정할 텍스트 가져오기
     const post = await postRepository.getById(id) // 해당 ID의 포스트 가져오기
     if (!post) {
         return res.status(404).json({ message: `포스트 ${id}를 찾을 수 없습니다.` })
     }
+    if (post.idx !== req.id) { // 포스트 작성자와 요청한 사용자가 일치하는지 확인
+        return res.status(403).json({ message: "권한이 없습니다." })
+    }
+    const updated = await postRepository.updatePost(id, text) // 포스트 수정   
 
     res.status(200).json({ message: `포스트 ${id} 수정 완료`, post: { ...post, text } }) // 수정 완료 메시지와 함께 수정된 포스트 반환
 }
 
 
-// 포스트 삭제하는 함수
+// 포스트 삭제하는 함수 
 export async function deletePost(req, res) {
     const id = req.params.id // URL 파라미터에서 포스트 ID 가져오기
     const post = await postRepository.getById(id) // 해당 ID의 포스트 가져오기
     if (!post) {
         return res.status(404).json({ message: `포스트 ${id}를 찾을 수 없습니다.` })
+    }
+    if (post.idx !== req.id) { // 포스트 작성자와 요청한 사용자가 일치하는지 확인
+        return res.status(403).json({ message: "권한이 없습니다." })
     }
     await postRepository.deleteById(id) // 해당 ID의 포스트 삭제
     res.status(200).json({ message: `포스트 ${id} 삭제 완료` })
