@@ -1,12 +1,23 @@
 import express from "express"
 import { config } from "./config.mjs"
 import { connectDB } from "./db/database.mjs"
+import authRouter from "./router/auth.mjs"
+import postRouter from "./router/posts.mjs"
 
-
-
+// Express 애플리케이션 생성
 const app = express()
 
+// JSON 요청 본문을 파싱하기 위한 미들웨어
 app.use(express.json())
+
+// 라우터 설정
+app.use("/auth", authRouter)
+app.use("/post", postRouter)
+
+// 404 처리 미들웨어
+app.use((req, res, next) => {
+    res.status(404).send("404 Not Found")
+})
 
 
 // 포트 설정은 config.mjs 에서 가져와 사용 가능

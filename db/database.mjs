@@ -14,3 +14,12 @@ export async function connectDB() {
             throw err
         }) 
 }
+
+// users 컬렉션 객체
+export function getUsers() {
+    return db.collection("users") // users 컬렉션을 반환
+}
+
+export function getPosts() {
+    return db.collection("posts") // posts 컬렉션을 반환
+}
